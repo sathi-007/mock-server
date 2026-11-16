@@ -40,7 +40,7 @@ No database environment variables are required.
 
 `POST /auth/login` expects `Content-Type: application/json` and `{ "email", "password" }`. Every seeded user accepts the password `Password123!`.
 
-Login returns the previous payload fields plus JWT `AccessToken` (10 minutes) and `RefreshToken` (30 minutes). `accessToken` is the same value as `AccessToken`.
+Login and refresh return JWT `AccessToken` (10 minutes) and `RefreshToken` (30 minutes), plus `accessToken` (the same value as `AccessToken`), `tokenType`, and `expiresIn`. The signed-in user is not in this payload; read it from `GET /users/me`.
 
 ```json
 {
@@ -49,8 +49,7 @@ Login returns the previous payload fields plus JWT `AccessToken` (10 minutes) an
     "RefreshToken": "<jwt>",
     "accessToken": "<same value as AccessToken>",
     "tokenType": "Bearer",
-    "expiresIn": 600,
-    "user": { "id": "1", "name": "Satish", "email": "satish@example.com", "city": "Tirupati" }
+    "expiresIn": 600
   }
 }
 ```

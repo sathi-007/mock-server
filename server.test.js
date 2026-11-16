@@ -79,7 +79,7 @@ describe('JWT auth', () => {
     assert.equal(REFRESH_TTL_SECONDS, 1800);
   });
 
-  test('login returns access and refresh JWTs and keeps the previous payload fields', async () => {
+  test('login returns access and refresh JWTs without the user object', async () => {
     const options = appOptions();
     const server = await listen(options);
     try {
@@ -95,15 +95,10 @@ describe('JWT auth', () => {
       assert.equal(response.status, 200);
       assert.equal(response.headers.get('cache-control'), 'no-store');
       const data = response.json.data;
+      assert.deepEqual(Object.keys(data), ['AccessToken', 'RefreshToken', 'accessToken', 'tokenType', 'expiresIn']);
       assert.equal(data.accessToken, data.AccessToken);
       assert.equal(data.tokenType, 'Bearer');
       assert.equal(data.expiresIn, 600);
-      assert.deepEqual(data.user, {
-        id: '1',
-        name: 'Satish',
-        email: 'satish@example.com',
-        city: 'Tirupati'
-      });
       const access = jwt.verify(data.AccessToken, 'test-secret', { algorithms: ['HS256'] });
       const refresh = jwt.verify(data.RefreshToken, 'test-secret', { algorithms: ['HS256'] });
       assert.equal(access.typ, 'access');
@@ -209,7 +204,7 @@ describe('JWT auth', () => {
       assert.notEqual(camel.json.data.AccessToken, issued.AccessToken);
       assert.equal(camel.json.data.accessToken, camel.json.data.AccessToken);
       assert.equal(camel.json.data.expiresIn, 600);
-      assert.equal(camel.json.data.user.email, 'satish@example.com');
+      assert.deepEqual(Object.keys(camel.json.data), ['AccessToken', 'RefreshToken', 'accessToken', 'tokenType', 'expiresIn']);
 
       const replay = await api(first.base, 'POST', '/auth/refresh', { body: { RefreshToken: issued.RefreshToken } });
       assert.equal(replay.status, 401);

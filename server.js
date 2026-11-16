@@ -218,8 +218,7 @@ export function createApp({
       RefreshToken: refreshToken,
       accessToken,
       tokenType: 'Bearer',
-      expiresIn: accessTtlSeconds,
-      user
+      expiresIn: accessTtlSeconds
     };
   }
 
