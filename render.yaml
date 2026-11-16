@@ -1,0 +1,8 @@
+# Render Node web service. No database or required environment variables.
+services:
+  - type: web
+    name: mock-server
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
