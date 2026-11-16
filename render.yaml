@@ -1,4 +1,6 @@
 # Render Node web service. No database or required environment variables.
+# JWT_SECRET is optional. Render generates one for this service. When it is
+# unset, the server uses the documented dev fallback.
 services:
   - type: web
     name: mock-server
@@ -6,3 +8,6 @@ services:
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
